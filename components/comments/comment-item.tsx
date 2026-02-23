@@ -18,7 +18,7 @@ interface CommentData {
 	downvotes: number;
 	isRemoved: boolean;
 	createdAt: number;
-	replies: CommentData[];
+	replies?: CommentData[];
 }
 
 interface CommentItemProps {
@@ -90,9 +90,9 @@ export function CommentItem({ comment, storyId, depth = 0, userVote }: CommentIt
 				</div>
 			)}
 
-			{comment.replies.length > 0 && (
+			{(comment.replies?.length ?? 0) > 0 && (
 				<div className="mt-3 space-y-3">
-					{comment.replies.map((reply) => (
+					{comment.replies!.map((reply) => (
 						<CommentItem key={reply._id} comment={reply} storyId={storyId} depth={depth + 1} />
 					))}
 				</div>

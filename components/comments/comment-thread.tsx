@@ -21,7 +21,7 @@ export function CommentThread({ storyId }: CommentThreadProps) {
 		);
 	}
 
-	const totalCount = comments.reduce((acc, c) => acc + 1 + c.replies.length, 0);
+	const totalCount = comments.reduce((acc, c) => acc + 1 + (c.replies?.length ?? 0), 0);
 
 	return (
 		<div className="space-y-6">
