@@ -14,7 +14,7 @@
 		"format": "bunx @biomejs/biome format --write ."
 	},
 	"dependencies": {
-		"@auth/core": "^0.34.3",
+		"@auth/core": "0.37.0",
 		"@convex-dev/auth": "^0.0.90",
 		"@hookform/resolvers": "^5.2.2",
 		"class-variance-authority": "^0.7.1",
