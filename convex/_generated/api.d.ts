@@ -18,6 +18,7 @@ import type * as lib_moderation from "../lib/moderation.js";
 import type * as lib_scoring from "../lib/scoring.js";
 import type * as receipts from "../receipts.js";
 import type * as reports from "../reports.js";
+import type * as seed from "../seed.js";
 import type * as stories from "../stories.js";
 import type * as users from "../users.js";
 import type * as votes from "../votes.js";
@@ -39,6 +40,7 @@ declare const fullApi: ApiFromModules<{
   "lib/scoring": typeof lib_scoring;
   receipts: typeof receipts;
   reports: typeof reports;
+  seed: typeof seed;
   stories: typeof stories;
   users: typeof users;
   votes: typeof votes;
