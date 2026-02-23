@@ -31,14 +31,15 @@ describe("Header", () => {
 
 	it("renders navigation links", () => {
 		render(<Header />);
-		expect(screen.getByRole("link", { name: /leaderboard/i })).toBeInTheDocument();
-		expect(screen.getByRole("link", { name: /submit/i })).toBeInTheDocument();
-		expect(screen.getByRole("link", { name: /about/i })).toBeInTheDocument();
+		// Desktop and mobile nav both render links
+		expect(screen.getAllByRole("link", { name: /leaderboard/i }).length).toBeGreaterThanOrEqual(1);
+		expect(screen.getAllByRole("link", { name: /submit/i }).length).toBeGreaterThanOrEqual(1);
+		expect(screen.getAllByRole("link", { name: /about/i }).length).toBeGreaterThanOrEqual(1);
 	});
 
 	it("renders login link when unauthenticated", () => {
 		render(<Header />);
-		expect(screen.getByRole("link", { name: /login/i })).toBeInTheDocument();
+		expect(screen.getAllByRole("link", { name: /login/i }).length).toBeGreaterThanOrEqual(1);
 	});
 
 	it("renders tagline", () => {

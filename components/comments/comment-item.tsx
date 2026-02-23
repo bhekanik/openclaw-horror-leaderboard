@@ -3,6 +3,7 @@
 import { useMutation } from "convex/react";
 import { ArrowBigDown, ArrowBigUp, MessageSquare } from "lucide-react";
 import { useState } from "react";
+import { formatTimeAgo } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 import { CommentForm } from "./comment-form";
@@ -48,7 +49,7 @@ export function CommentItem({ comment, storyId, depth = 0, userVote }: CommentIt
 					<Button
 						variant="ghost"
 						size="sm"
-						className="h-6 px-1"
+						className="h-6 px-1 min-h-9 min-w-9 sm:min-h-0 sm:min-w-0"
 						onClick={() => castVote({ commentId: comment._id, type: "upvote" })}
 					>
 						<ArrowBigUp
@@ -59,7 +60,7 @@ export function CommentItem({ comment, storyId, depth = 0, userVote }: CommentIt
 					<Button
 						variant="ghost"
 						size="sm"
-						className="h-6 px-1"
+						className="h-6 px-1 min-h-9 min-w-9 sm:min-h-0 sm:min-w-0"
 						onClick={() => castVote({ commentId: comment._id, type: "downvote" })}
 					>
 						<ArrowBigDown
@@ -70,7 +71,7 @@ export function CommentItem({ comment, storyId, depth = 0, userVote }: CommentIt
 						<Button
 							variant="ghost"
 							size="sm"
-							className="h-6 px-2 text-xs"
+							className="h-6 px-2 text-xs min-h-9 sm:min-h-0"
 							onClick={() => setShowReplyForm(!showReplyForm)}
 						>
 							<MessageSquare className="h-3 w-3 mr-1" />
@@ -101,11 +102,3 @@ export function CommentItem({ comment, storyId, depth = 0, userVote }: CommentIt
 	);
 }
 
-function formatTimeAgo(timestamp: number): string {
-	const seconds = Math.floor((Date.now() - timestamp) / 1000);
-	if (seconds < 60) return "just now";
-	if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
-	if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
-	if (seconds < 2592000) return `${Math.floor(seconds / 86400)}d ago`;
-	return new Date(timestamp).toLocaleDateString();
-}

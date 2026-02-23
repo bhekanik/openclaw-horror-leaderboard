@@ -13,7 +13,7 @@ export function Footer() {
 					</Link>
 				</div>
 				<p>Not affiliated with OpenClaw, Peter Steinberger, or any related entity.</p>
-				<p className="text-xs">OpenClaw Horror Stories — community-driven accountability</p>
+				<p className="text-xs font-display">OpenClaw Horror Stories — community-driven accountability</p>
 			</div>
 		</footer>
 	);

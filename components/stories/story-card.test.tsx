@@ -1,10 +1,12 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { StoryCard } from "./story-card";
 
 vi.mock("convex/react", () => ({
 	useMutation: () => vi.fn(),
 	useQuery: () => null,
+	useConvexAuth: () => ({ isAuthenticated: false, isLoading: false }),
 }));
 
 vi.mock("@/convex/_generated/api", () => ({
@@ -31,36 +33,44 @@ const mockStory = {
 	isRemoved: false,
 };
 
+function renderCard(props: any = {}) {
+	return render(
+		<TooltipProvider>
+			<StoryCard story={mockStory} {...props} />
+		</TooltipProvider>,
+	);
+}
+
 describe("StoryCard", () => {
 	it("renders story title as link", () => {
-		render(<StoryCard story={mockStory} />);
+		renderCard();
 		const link = screen.getByRole("link", { name: /agent deleted my production database/i });
 		expect(link).toBeInTheDocument();
 		expect(link).toHaveAttribute("href", "/story/story123");
 	});
 
 	it("renders horror score prominently", () => {
-		render(<StoryCard story={mockStory} />);
+		renderCard();
 		expect(screen.getByText("0.85")).toBeInTheDocument();
 	});
 
 	it("renders category badge", () => {
-		render(<StoryCard story={mockStory} />);
+		renderCard();
 		expect(screen.getByText(/it went rogue/i)).toBeInTheDocument();
 	});
 
 	it("renders receipt count", () => {
-		render(<StoryCard story={mockStory} />);
+		renderCard();
 		expect(screen.getByText(/3 receipts/i)).toBeInTheDocument();
 	});
 
 	it("renders author username", () => {
-		render(<StoryCard story={mockStory} />);
+		renderCard();
 		expect(screen.getByText("scared_dev")).toBeInTheDocument();
 	});
 
-	it("renders vote counts", () => {
-		render(<StoryCard story={mockStory} />);
-		expect(screen.getByText("42")).toBeInTheDocument();
+	it("renders vote buttons", () => {
+		renderCard();
+		expect(screen.getByRole("button", { name: /upvote/i })).toBeInTheDocument();
 	});
 });

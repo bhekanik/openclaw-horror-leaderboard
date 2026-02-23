@@ -1,10 +1,12 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { UserProfile } from "./user-profile";
 
 vi.mock("convex/react", () => ({
 	useQuery: () => [],
 	useMutation: () => vi.fn(),
+	useConvexAuth: () => ({ isAuthenticated: false, isLoading: false }),
 }));
 
 vi.mock("@/convex/_generated/api", () => ({
@@ -27,23 +29,23 @@ const mockUser = {
 
 describe("UserProfile", () => {
 	it("renders username", () => {
-		render(<UserProfile user={mockUser} stories={[]} />);
+		render(<TooltipProvider><UserProfile user={mockUser} stories={[]} /></TooltipProvider>);
 		expect(screen.getByText("horror_dev")).toBeInTheDocument();
 	});
 
 	it("renders karma stat", () => {
-		render(<UserProfile user={mockUser} stories={[]} />);
+		render(<TooltipProvider><UserProfile user={mockUser} stories={[]} /></TooltipProvider>);
 		expect(screen.getByText("150")).toBeInTheDocument();
 		expect(screen.getByText(/karma/i)).toBeInTheDocument();
 	});
 
 	it("renders stories count", () => {
-		render(<UserProfile user={mockUser} stories={[]} />);
+		render(<TooltipProvider><UserProfile user={mockUser} stories={[]} /></TooltipProvider>);
 		expect(screen.getByText("5")).toBeInTheDocument();
 	});
 
 	it("renders badges", () => {
-		render(<UserProfile user={mockUser} stories={[]} />);
+		render(<TooltipProvider><UserProfile user={mockUser} stories={[]} /></TooltipProvider>);
 		expect(screen.getByText(/survivor/i)).toBeInTheDocument();
 		expect(screen.getByText(/witness/i)).toBeInTheDocument();
 	});
@@ -58,6 +60,8 @@ describe("UserProfile", () => {
 				horrorScore: 0.9,
 				upvotes: 50,
 				downvotes: 2,
+				fakeFlags: 0,
+				verifiedFlags: 3,
 				ripVotes: 10,
 				totalVotes: 62,
 				receiptIds: ["r1"],
@@ -67,12 +71,12 @@ describe("UserProfile", () => {
 				isRemoved: false,
 			},
 		];
-		render(<UserProfile user={mockUser} stories={stories} />);
+		render(<TooltipProvider><UserProfile user={mockUser} stories={stories} /></TooltipProvider>);
 		expect(screen.getByText("My Horror Story")).toBeInTheDocument();
 	});
 
 	it("renders empty stories message", () => {
-		render(<UserProfile user={mockUser} stories={[]} />);
+		render(<TooltipProvider><UserProfile user={mockUser} stories={[]} /></TooltipProvider>);
 		expect(screen.getByText(/no stories submitted/i)).toBeInTheDocument();
 	});
 });

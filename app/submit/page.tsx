@@ -16,7 +16,7 @@ export default function SubmitPage() {
 			</AuthLoading>
 			<Unauthenticated>
 				<div className="text-center space-y-4 py-12">
-					<h1 className="text-3xl font-bold">Sign In Required</h1>
+					<h1 className="text-3xl font-bold font-display">Sign In Required</h1>
 					<p className="text-muted-foreground">You need to be signed in to submit a story.</p>
 					<Button asChild>
 						<Link href="/auth/login">Sign In</Link>

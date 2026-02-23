@@ -1,10 +1,12 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import CategoryPage from "./page";
 
 vi.mock("convex/react", () => ({
 	useQuery: () => [],
 	useMutation: () => vi.fn(),
+	useConvexAuth: () => ({ isAuthenticated: false, isLoading: false }),
 }));
 
 vi.mock("@/convex/_generated/api", () => ({
@@ -16,17 +18,17 @@ vi.mock("@/convex/_generated/api", () => ({
 
 describe("Category Page", () => {
 	it("renders category heading with emoji and label", () => {
-		render(<CategoryPage params={{ slug: "rogue" }} />);
+		render(<TooltipProvider><CategoryPage params={{ slug: "rogue" }} /></TooltipProvider>);
 		expect(screen.getByRole("heading", { name: /it went rogue/i })).toBeInTheDocument();
 	});
 
 	it("renders leaderboard filtered by category", () => {
-		render(<CategoryPage params={{ slug: "security" }} />);
+		render(<TooltipProvider><CategoryPage params={{ slug: "security" }} /></TooltipProvider>);
 		expect(screen.getByText(/no stories yet/i)).toBeInTheDocument();
 	});
 
 	it("renders unknown category gracefully", () => {
-		render(<CategoryPage params={{ slug: "nonexistent" }} />);
+		render(<TooltipProvider><CategoryPage params={{ slug: "nonexistent" }} /></TooltipProvider>);
 		expect(screen.getByRole("heading")).toBeInTheDocument();
 	});
 });

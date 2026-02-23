@@ -10,8 +10,8 @@ export default function Error({
 	reset: () => void;
 }) {
 	return (
-		<div className="text-center py-20 space-y-6">
-			<h2 className="text-3xl font-bold">Something went wrong</h2>
+		<div className="text-center py-20 space-y-6 animate-fade-in-up">
+			<h2 className="text-3xl font-bold font-display">Something went wrong</h2>
 			<p className="text-muted-foreground">An unexpected error occurred. This has been logged.</p>
 			<Button onClick={reset}>Try again</Button>
 		</div>

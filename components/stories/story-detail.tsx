@@ -5,19 +5,12 @@ import Link from "next/link";
 import Markdown from "react-markdown";
 import rehypeSanitize from "rehype-sanitize";
 import remarkGfm from "remark-gfm";
+import { CATEGORY_MAP } from "@/lib/constants";
+import { formatTimeAgo } from "@/lib/format";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-
-const CATEGORY_MAP: Record<string, { label: string; emoji: string }> = {
-	rogue: { label: "It went rogue", emoji: "\u{1F525}" },
-	cost_money: { label: "It cost me money", emoji: "\u{1F4B8}" },
-	scared_me: { label: "It scared me", emoji: "\u{1F631}" },
-	security: { label: "Security nightmare", emoji: "\u{1F513}" },
-	epic_fail: { label: "Epic fail", emoji: "\u{1F926}" },
-	identity_crisis: { label: "Identity crisis", emoji: "\u{1F3AD}" },
-	almost_catastrophic: { label: "Almost catastrophic", emoji: "\u{1F480}" },
-};
+import { VoteButtons } from "./vote-buttons";
 
 interface Receipt {
 	_id: any;
@@ -41,6 +34,9 @@ interface StoryDetailProps {
 		openclawVersion?: string;
 		upvotes: number;
 		downvotes: number;
+		fakeFlags: number;
+		verifiedFlags: number;
+		ripVotes: number;
 		horrorScore: number;
 	};
 	receipts: Receipt[];
@@ -49,26 +45,29 @@ interface StoryDetailProps {
 		username?: string;
 		karma?: number;
 	} | null;
+	isAuthenticated?: boolean;
 }
 
-export function StoryDetail({ story, receipts, author }: StoryDetailProps) {
+export function StoryDetail({ story, receipts, author, isAuthenticated = false }: StoryDetailProps) {
 	const cat = CATEGORY_MAP[story.category];
 	const timeAgo = formatTimeAgo(story.createdAt);
+	const Icon = cat?.icon;
 
 	return (
-		<article className="space-y-6">
+		<article className="space-y-6 animate-fade-in-up">
 			{/* Header */}
 			<div className="space-y-3">
 				<div className="flex items-center gap-2 flex-wrap">
 					{cat && (
-						<Badge variant="secondary">
-							{cat.emoji} {cat.label}
+						<Badge variant="secondary" className="gap-1">
+							{Icon && <Icon className="h-3.5 w-3.5" />}
+							{cat.label}
 						</Badge>
 					)}
 					<Badge variant="outline">Severity: {story.severity}/5</Badge>
 					{story.openclawVersion && <Badge variant="outline">v{story.openclawVersion}</Badge>}
 				</div>
-				<h1 className="text-3xl font-bold">{story.title}</h1>
+				<h1 className="text-3xl font-bold font-display">{story.title}</h1>
 				<div className="flex items-center gap-2 text-sm text-muted-foreground">
 					{author && (
 						<>
@@ -91,6 +90,16 @@ export function StoryDetail({ story, receipts, author }: StoryDetailProps) {
 					)}
 				</div>
 			</div>
+
+			<VoteButtons
+				storyId={story._id}
+				upvotes={story.upvotes}
+				downvotes={story.downvotes}
+				fakeFlags={story.fakeFlags}
+				verifiedFlags={story.verifiedFlags}
+				ripVotes={story.ripVotes}
+				isAuthenticated={isAuthenticated}
+			/>
 
 			<Separator />
 
@@ -117,7 +126,7 @@ export function StoryDetail({ story, receipts, author }: StoryDetailProps) {
 			{/* Receipts */}
 			{receipts.length > 0 && (
 				<div className="space-y-4">
-					<h2 className="text-xl font-semibold">Evidence</h2>
+					<h2 className="text-xl font-semibold font-display">Evidence</h2>
 					<div className="space-y-3">
 						{receipts.map((receipt) => (
 							<ReceiptItem key={receipt._id} receipt={receipt} />
@@ -166,13 +175,4 @@ function ReceiptItem({ receipt }: { receipt: Receipt }) {
 	}
 
 	return null;
-}
-
-function formatTimeAgo(timestamp: number): string {
-	const seconds = Math.floor((Date.now() - timestamp) / 1000);
-	if (seconds < 60) return "just now";
-	if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
-	if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
-	if (seconds < 2592000) return `${Math.floor(seconds / 86400)}d ago`;
-	return new Date(timestamp).toLocaleDateString();
 }

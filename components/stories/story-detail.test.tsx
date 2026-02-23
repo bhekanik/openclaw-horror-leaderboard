@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { StoryDetail } from "./story-detail";
 
 vi.mock("react-markdown", () => ({
@@ -8,6 +9,15 @@ vi.mock("react-markdown", () => ({
 
 vi.mock("rehype-sanitize", () => ({ default: {} }));
 vi.mock("remark-gfm", () => ({ default: {} }));
+
+vi.mock("convex/react", () => ({
+	useMutation: () => vi.fn(),
+	useQuery: () => null,
+}));
+
+vi.mock("@/convex/_generated/api", () => ({
+	api: { votes: { cast: "votes:cast", getUserVote: "votes:getUserVote" } },
+}));
 
 const mockStory = {
 	_id: "story123" as any,
@@ -60,43 +70,43 @@ const mockAuthor = {
 
 describe("StoryDetail", () => {
 	it("renders story title", () => {
-		render(<StoryDetail story={mockStory} receipts={mockReceipts} author={mockAuthor} />);
+		render(<TooltipProvider><StoryDetail story={mockStory} receipts={mockReceipts} author={mockAuthor} /></TooltipProvider>);
 		expect(screen.getByText("OpenClaw Deleted My Resume")).toBeInTheDocument();
 	});
 
 	it("renders story body as markdown", () => {
-		render(<StoryDetail story={mockStory} receipts={mockReceipts} author={mockAuthor} />);
+		render(<TooltipProvider><StoryDetail story={mockStory} receipts={mockReceipts} author={mockAuthor} /></TooltipProvider>);
 		expect(screen.getByTestId("markdown")).toBeInTheDocument();
 	});
 
 	it("renders category badge", () => {
-		render(<StoryDetail story={mockStory} receipts={mockReceipts} author={mockAuthor} />);
+		render(<TooltipProvider><StoryDetail story={mockStory} receipts={mockReceipts} author={mockAuthor} /></TooltipProvider>);
 		expect(screen.getByText(/it went rogue/i)).toBeInTheDocument();
 	});
 
 	it("renders author username", () => {
-		render(<StoryDetail story={mockStory} receipts={mockReceipts} author={mockAuthor} />);
+		render(<TooltipProvider><StoryDetail story={mockStory} receipts={mockReceipts} author={mockAuthor} /></TooltipProvider>);
 		expect(screen.getByText("traumatized_dev")).toBeInTheDocument();
 	});
 
 	it("renders tags", () => {
-		render(<StoryDetail story={mockStory} receipts={mockReceipts} author={mockAuthor} />);
+		render(<TooltipProvider><StoryDetail story={mockStory} receipts={mockReceipts} author={mockAuthor} /></TooltipProvider>);
 		expect(screen.getByText("automation")).toBeInTheDocument();
 		expect(screen.getByText("data-loss")).toBeInTheDocument();
 	});
 
 	it("renders link receipts", () => {
-		render(<StoryDetail story={mockStory} receipts={mockReceipts} author={mockAuthor} />);
+		render(<TooltipProvider><StoryDetail story={mockStory} receipts={mockReceipts} author={mockAuthor} /></TooltipProvider>);
 		expect(screen.getByText(/twitter\.com/i)).toBeInTheDocument();
 	});
 
 	it("renders transcript receipts", () => {
-		render(<StoryDetail story={mockStory} receipts={mockReceipts} author={mockAuthor} />);
+		render(<TooltipProvider><StoryDetail story={mockStory} receipts={mockReceipts} author={mockAuthor} /></TooltipProvider>);
 		expect(screen.getByText(/why did you delete/i)).toBeInTheDocument();
 	});
 
 	it("renders severity", () => {
-		render(<StoryDetail story={mockStory} receipts={mockReceipts} author={mockAuthor} />);
+		render(<TooltipProvider><StoryDetail story={mockStory} receipts={mockReceipts} author={mockAuthor} /></TooltipProvider>);
 		expect(screen.getByText(/4\/5/)).toBeInTheDocument();
 	});
 });

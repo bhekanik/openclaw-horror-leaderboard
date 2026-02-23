@@ -1,19 +1,12 @@
 "use client";
 
-import { ArrowBigUp, FileCheck } from "lucide-react";
+import { FileCheck } from "lucide-react";
 import Link from "next/link";
+import { CATEGORY_MAP } from "@/lib/constants";
+import { formatTimeAgo } from "@/lib/format";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-
-const CATEGORY_MAP: Record<string, { label: string; emoji: string }> = {
-	rogue: { label: "It went rogue", emoji: "\u{1F525}" },
-	cost_money: { label: "It cost me money", emoji: "\u{1F4B8}" },
-	scared_me: { label: "It scared me", emoji: "\u{1F631}" },
-	security: { label: "Security nightmare", emoji: "\u{1F513}" },
-	epic_fail: { label: "Epic fail", emoji: "\u{1F926}" },
-	identity_crisis: { label: "Identity crisis", emoji: "\u{1F3AD}" },
-	almost_catastrophic: { label: "Almost catastrophic", emoji: "\u{1F480}" },
-};
+import { VoteButtons } from "./vote-buttons";
 
 interface StoryCardProps {
 	story: {
@@ -24,6 +17,8 @@ interface StoryCardProps {
 		horrorScore: number;
 		upvotes: number;
 		downvotes: number;
+		fakeFlags: number;
+		verifiedFlags: number;
 		ripVotes: number;
 		totalVotes: number;
 		receiptIds: any[];
@@ -31,19 +26,29 @@ interface StoryCardProps {
 		authorUsername?: string;
 		tags: string[];
 	};
+	rank?: number;
+	index?: number;
+	isAuthenticated?: boolean;
 }
 
-export function StoryCard({ story }: StoryCardProps) {
+export function StoryCard({ story, rank, index, isAuthenticated = false }: StoryCardProps) {
 	const cat = CATEGORY_MAP[story.category];
 	const scoreDisplay = story.horrorScore.toFixed(2);
 	const timeAgo = formatTimeAgo(story.createdAt);
+	const Icon = cat?.icon;
 
 	return (
-		<Card className="hover:border-primary/30 transition-colors">
+		<Card
+			className="hover:border-primary/30 hover:translate-y-[-2px] hover:shadow-lg hover:shadow-primary/5 transition-all duration-200 animate-card-enter"
+			style={index !== undefined ? { animationDelay: `${index * 50}ms` } : undefined}
+		>
 			<CardContent className="flex gap-4 py-4">
 				{/* Score */}
-				<div className="flex flex-col items-center justify-center min-w-[60px]">
-					<span className="text-2xl font-bold text-primary">{scoreDisplay}</span>
+				<div className="flex flex-col items-center justify-center min-w-[52px] sm:min-w-[60px] bg-primary/5 rounded-lg px-2 py-1">
+					{rank !== undefined && (
+						<span className="text-[10px] text-muted-foreground font-medium">#{rank}</span>
+					)}
+					<span className="text-2xl font-bold text-primary font-display">{scoreDisplay}</span>
 					<span className="text-xs text-muted-foreground">score</span>
 				</div>
 
@@ -52,7 +57,7 @@ export function StoryCard({ story }: StoryCardProps) {
 					<div className="flex items-start gap-2">
 						<Link
 							href={`/story/${story._id}`}
-							className="text-lg font-semibold hover:text-primary transition-colors line-clamp-2"
+							className="text-lg font-semibold hover:text-primary transition-colors line-clamp-2 font-display"
 						>
 							{story.title}
 						</Link>
@@ -60,14 +65,11 @@ export function StoryCard({ story }: StoryCardProps) {
 
 					<div className="flex items-center gap-2 flex-wrap text-sm">
 						{cat && (
-							<Badge variant="secondary" className="text-xs">
-								{cat.emoji} {cat.label}
+							<Badge variant="secondary" className="text-xs gap-1">
+								{Icon && <Icon className="h-3 w-3" />}
+								{cat.label}
 							</Badge>
 						)}
-						<span className="flex items-center gap-1 text-muted-foreground">
-							<ArrowBigUp className="h-3 w-3" />
-							{story.upvotes}
-						</span>
 						<span className="flex items-center gap-1 text-muted-foreground">
 							<FileCheck className="h-3 w-3" />
 							{story.receiptIds.length} receipts
@@ -85,17 +87,18 @@ export function StoryCard({ story }: StoryCardProps) {
 						)}
 						<span className="text-muted-foreground">{timeAgo}</span>
 					</div>
+
+					<VoteButtons
+						storyId={story._id}
+						upvotes={story.upvotes}
+						downvotes={story.downvotes}
+						fakeFlags={story.fakeFlags}
+						verifiedFlags={story.verifiedFlags}
+						ripVotes={story.ripVotes}
+						isAuthenticated={isAuthenticated}
+					/>
 				</div>
 			</CardContent>
 		</Card>
 	);
-}
-
-function formatTimeAgo(timestamp: number): string {
-	const seconds = Math.floor((Date.now() - timestamp) / 1000);
-	if (seconds < 60) return "just now";
-	if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
-	if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
-	if (seconds < 2592000) return `${Math.floor(seconds / 86400)}d ago`;
-	return new Date(timestamp).toLocaleDateString();
 }

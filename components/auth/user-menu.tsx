@@ -30,7 +30,7 @@ export function UserMenu({ user }: UserMenuProps) {
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
 				<Button variant="ghost" className="flex items-center gap-2">
-					<Avatar className="h-6 w-6">
+					<Avatar className="h-6 w-6 ring-2 ring-primary/20">
 						<AvatarFallback className="text-xs">{initials}</AvatarFallback>
 					</Avatar>
 					<span className="text-sm hidden sm:inline">{displayName}</span>

@@ -31,7 +31,7 @@ export default function UserPage({ params }: { params: { username: string } }) {
 	if (user === null) {
 		return (
 			<div className="text-center py-12">
-				<h1 className="text-3xl font-bold">User Not Found</h1>
+				<h1 className="text-3xl font-bold font-display">User Not Found</h1>
 				<p className="text-muted-foreground mt-2">This user doesn&apos;t exist.</p>
 			</div>
 		);

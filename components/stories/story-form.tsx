@@ -3,6 +3,7 @@
 import { useMutation } from "convex/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { CATEGORIES, SEVERITY_LABELS } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -13,18 +14,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/convex/_generated/api";
 import { ReceiptLinkInput } from "./receipt-link-input";
 import { ReceiptTranscriptInput } from "./receipt-transcript-input";
-
-const CATEGORIES = [
-	{ value: "rogue", label: "It went rogue", emoji: "\u{1F525}" },
-	{ value: "cost_money", label: "It cost me money", emoji: "\u{1F4B8}" },
-	{ value: "scared_me", label: "It scared me", emoji: "\u{1F631}" },
-	{ value: "security", label: "Security nightmare", emoji: "\u{1F513}" },
-	{ value: "epic_fail", label: "Epic fail", emoji: "\u{1F926}" },
-	{ value: "identity_crisis", label: "Identity crisis", emoji: "\u{1F3AD}" },
-	{ value: "almost_catastrophic", label: "Almost catastrophic", emoji: "\u{1F480}" },
-] as const;
-
-const SEVERITY_LABELS = ["Minor annoyance", "Problematic", "Serious", "Severe", "Catastrophic"];
 
 export function StoryForm() {
 	const createStory = useMutation(api.stories.create);
@@ -107,7 +96,7 @@ export function StoryForm() {
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle className="text-2xl">Submit Your Horror Story</CardTitle>
+				<CardTitle className="text-2xl font-display">Submit Your Horror Story</CardTitle>
 			</CardHeader>
 			<CardContent>
 				<form onSubmit={handleSubmit} className="space-y-6">
@@ -141,22 +130,25 @@ export function StoryForm() {
 					{/* Category */}
 					<div className="space-y-2">
 						<Label>Category</Label>
-						<div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
-							{CATEGORIES.map((cat) => (
-								<button
-									key={cat.value}
-									type="button"
-									onClick={() => setCategory(cat.value)}
-									className={`flex items-center gap-2 rounded-md border p-2 text-sm transition-colors ${
-										category === cat.value
-											? "border-primary bg-primary/10 text-primary"
-											: "border-border hover:border-primary/50"
-									}`}
-								>
-									<span>{cat.emoji}</span>
-									<span>{cat.label}</span>
-								</button>
-							))}
+						<div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+							{CATEGORIES.map((cat) => {
+								const Icon = cat.icon;
+								return (
+									<button
+										key={cat.value}
+										type="button"
+										onClick={() => setCategory(cat.value)}
+										className={`flex items-center gap-2 rounded-md border p-2 min-h-11 text-sm transition-colors ${
+											category === cat.value
+												? "border-primary bg-primary/10 text-primary"
+												: "border-border hover:border-primary/50"
+										}`}
+									>
+										<Icon className="h-4 w-4 shrink-0" />
+										<span>{cat.label}</span>
+									</button>
+								);
+							})}
 						</div>
 					</div>
 

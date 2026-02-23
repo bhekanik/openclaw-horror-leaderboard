@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { CATEGORIES } from "@/lib/constants";
 
 export const metadata: Metadata = {
 	title: "About - OpenClaw Horror Stories",
@@ -9,9 +10,9 @@ export const metadata: Metadata = {
 export default function AboutPage() {
 	return (
 		<div className="max-w-2xl mx-auto space-y-8">
-			<h1 className="text-3xl font-bold">What is this?</h1>
+			<h1 className="text-3xl font-bold font-display animate-fade-in-up">What is this?</h1>
 
-			<section className="space-y-4">
+			<section className="space-y-4 animate-fade-in-up" style={{ animationDelay: "50ms" }}>
 				<p className="text-muted-foreground">
 					OpenClaw Horror Stories is a community-driven leaderboard of the worst things OpenClaw AI
 					agents have done to real people. Think of it as a hall of infamy for AI gone wrong.
@@ -22,8 +23,8 @@ export default function AboutPage() {
 				</p>
 			</section>
 
-			<section className="space-y-4">
-				<h2 className="text-xl font-semibold">How does the scoring work?</h2>
+			<section className="space-y-4 animate-fade-in-up" style={{ animationDelay: "100ms" }}>
+				<h2 className="text-xl font-semibold font-display">How does the scoring work?</h2>
 				<p className="text-muted-foreground">
 					Stories are ranked using the Horror Score&trade; &mdash; a composite metric that combines
 					community votes (using Wilson score lower bound for statistical confidence), receipt
@@ -35,8 +36,8 @@ export default function AboutPage() {
 				</p>
 			</section>
 
-			<section className="space-y-4">
-				<h2 className="text-xl font-semibold">How can I contribute?</h2>
+			<section className="space-y-4 animate-fade-in-up" style={{ animationDelay: "150ms" }}>
+				<h2 className="text-xl font-semibold font-display">How can I contribute?</h2>
 				<ul className="space-y-2 text-muted-foreground list-disc list-inside">
 					<li>Submit your own horror story with evidence (screenshots, links, or transcripts)</li>
 					<li>Vote on stories to help the community surface the most impactful incidents</li>
@@ -45,36 +46,25 @@ export default function AboutPage() {
 				</ul>
 			</section>
 
-			<section className="space-y-4">
-				<h2 className="text-xl font-semibold">Categories</h2>
-				<ul className="space-y-2 text-muted-foreground list-disc list-inside">
-					<li>
-						<strong>It went rogue</strong> &mdash; Agent acted against instructions
-					</li>
-					<li>
-						<strong>It cost me money</strong> &mdash; Financial damage from agent actions
-					</li>
-					<li>
-						<strong>It scared me</strong> &mdash; Genuinely unsettling behavior
-					</li>
-					<li>
-						<strong>Security nightmare</strong> &mdash; Data exposure or security breaches
-					</li>
-					<li>
-						<strong>Epic fail</strong> &mdash; Spectacular failures
-					</li>
-					<li>
-						<strong>Identity crisis</strong> &mdash; Agent confused about what it is
-					</li>
-					<li>
-						<strong>Almost catastrophic</strong> &mdash; Near-misses that could have been
-						devastating
-					</li>
+			<section className="space-y-4 animate-fade-in-up" style={{ animationDelay: "200ms" }}>
+				<h2 className="text-xl font-semibold font-display">Categories</h2>
+				<ul className="space-y-2 text-muted-foreground">
+					{CATEGORIES.map((cat) => {
+						const Icon = cat.icon;
+						return (
+							<li key={cat.value} className="flex items-start gap-2">
+								<Icon className="h-4 w-4 mt-0.5 shrink-0 text-primary" />
+								<span>
+									<strong>{cat.label}</strong> &mdash; {cat.description}
+								</span>
+							</li>
+						);
+					})}
 				</ul>
 			</section>
 
-			<section className="space-y-4">
-				<h2 className="text-xl font-semibold">Rules</h2>
+			<section className="space-y-4 animate-fade-in-up" style={{ animationDelay: "250ms" }}>
+				<h2 className="text-xl font-semibold font-display">Rules</h2>
 				<ul className="space-y-2 text-muted-foreground list-disc list-inside">
 					<li>All stories must include at least one receipt (evidence)</li>
 					<li>No personally identifiable information of third parties</li>

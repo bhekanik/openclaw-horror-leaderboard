@@ -1,14 +1,9 @@
 "use client";
 
+import { BADGE_MAP } from "@/lib/constants";
 import { StoryCard } from "@/components/stories/story-card";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-
-const BADGE_MAP: Record<string, { label: string; emoji: string }> = {
-	survivor: { label: "Survivor", emoji: "\u{1F3C6}" },
-	witness: { label: "Witness", emoji: "\u{1F441}" },
-	skeptic: { label: "Skeptic", emoji: "\u{1F9D0}" },
-};
 
 interface UserProfileProps {
 	user: {
@@ -33,13 +28,13 @@ export function UserProfile({ user, stories }: UserProfileProps) {
 	return (
 		<div className="space-y-8">
 			{/* Profile Header */}
-			<div className="space-y-4">
+			<div className="space-y-4 animate-fade-in-up">
 				<div className="flex items-center gap-4">
-					<div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center text-2xl font-bold text-primary">
+					<div className="h-16 w-16 rounded-full bg-primary/10 ring-2 ring-primary/20 flex items-center justify-center text-2xl font-bold text-primary font-display">
 						{(user.username ?? "?")[0].toUpperCase()}
 					</div>
 					<div>
-						<h1 className="text-2xl font-bold">{user.username ?? "Anonymous"}</h1>
+						<h1 className="text-2xl font-bold font-display">{user.username ?? "Anonymous"}</h1>
 						{user.displayName && <p className="text-muted-foreground">{user.displayName}</p>}
 						<p className="text-sm text-muted-foreground">Joined {joinDate}</p>
 					</div>
@@ -50,9 +45,12 @@ export function UserProfile({ user, stories }: UserProfileProps) {
 					<div className="flex gap-2">
 						{user.badges.map((badge) => {
 							const info = BADGE_MAP[badge];
+							if (!info) return <Badge key={badge} variant="secondary">{badge}</Badge>;
+							const Icon = info.icon;
 							return (
-								<Badge key={badge} variant="secondary">
-									{info ? `${info.emoji} ${info.label}` : badge}
+								<Badge key={badge} variant="secondary" className="gap-1">
+									<Icon className="h-3 w-3" />
+									{info.label}
 								</Badge>
 							);
 						})}
@@ -61,36 +59,34 @@ export function UserProfile({ user, stories }: UserProfileProps) {
 			</div>
 
 			{/* Stats */}
-			<div className="grid grid-cols-3 gap-4">
-				<Card>
-					<CardContent className="text-center py-4">
-						<div className="text-2xl font-bold">{user.karma}</div>
-						<div className="text-sm text-muted-foreground">Karma</div>
-					</CardContent>
-				</Card>
-				<Card>
-					<CardContent className="text-center py-4">
-						<div className="text-2xl font-bold">{user.storiesCount}</div>
-						<div className="text-sm text-muted-foreground">Stories</div>
-					</CardContent>
-				</Card>
-				<Card>
-					<CardContent className="text-center py-4">
-						<div className="text-2xl font-bold">{user.totalHorrorScore.toFixed(1)}</div>
-						<div className="text-sm text-muted-foreground">Horror Score</div>
-					</CardContent>
-				</Card>
+			<div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+				{[
+					{ value: user.karma, label: "Karma" },
+					{ value: user.storiesCount, label: "Stories" },
+					{ value: user.totalHorrorScore.toFixed(1), label: "Horror Score" },
+				].map((stat, i) => (
+					<Card
+						key={stat.label}
+						className="animate-card-enter"
+						style={{ animationDelay: `${i * 80}ms` }}
+					>
+						<CardContent className="text-center py-4">
+							<div className="text-2xl font-bold font-display">{stat.value}</div>
+							<div className="text-sm text-muted-foreground">{stat.label}</div>
+						</CardContent>
+					</Card>
+				))}
 			</div>
 
 			{/* Stories */}
 			<div className="space-y-4">
-				<h2 className="text-lg font-semibold">Submitted Stories</h2>
+				<h2 className="text-lg font-semibold font-display">Submitted Stories</h2>
 				{stories.length === 0 ? (
 					<p className="text-muted-foreground text-center py-4">No stories submitted yet.</p>
 				) : (
 					<div className="space-y-3">
-						{stories.map((story) => (
-							<StoryCard key={story._id} story={story} />
+						{stories.map((story, i) => (
+							<StoryCard key={story._id} story={story} index={i} />
 						))}
 					</div>
 				)}

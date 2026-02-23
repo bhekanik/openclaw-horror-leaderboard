@@ -27,7 +27,7 @@ export function CommentThread({ storyId }: CommentThreadProps) {
 		<div className="space-y-6">
 			<div className="flex items-center gap-2">
 				<MessageSquare className="h-5 w-5" />
-				<h2 className="text-lg font-semibold">
+				<h2 className="text-lg font-semibold font-display">
 					{totalCount} {totalCount === 1 ? "Comment" : "Comments"}
 				</h2>
 			</div>

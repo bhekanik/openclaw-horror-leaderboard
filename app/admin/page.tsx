@@ -19,7 +19,7 @@ export default function AdminPage() {
 	if (!currentUser?.isAdmin) {
 		return (
 			<div className="text-center py-12">
-				<h1 className="text-3xl font-bold">Access Denied</h1>
+				<h1 className="text-3xl font-bold font-display">Access Denied</h1>
 				<p className="text-muted-foreground mt-2">You do not have admin privileges.</p>
 			</div>
 		);
@@ -27,7 +27,7 @@ export default function AdminPage() {
 
 	return (
 		<div className="space-y-8">
-			<h1 className="text-3xl font-bold">Admin Dashboard</h1>
+			<h1 className="text-3xl font-bold font-display">Admin Dashboard</h1>
 
 			{/* Stats */}
 			<div className="grid grid-cols-2 gap-4 max-w-md">
@@ -41,7 +41,7 @@ export default function AdminPage() {
 
 			{/* Report Queue */}
 			<div className="space-y-4">
-				<h2 className="text-lg font-semibold">Report Queue</h2>
+				<h2 className="text-lg font-semibold font-display">Report Queue</h2>
 				{!pendingReports || pendingReports.length === 0 ? (
 					<p className="text-muted-foreground">No pending reports.</p>
 				) : (
