@@ -11,6 +11,14 @@ export function Footer() {
 					<Link href="/" className="hover:text-foreground transition-colors">
 						Leaderboard
 					</Link>
+					<a
+						href="https://github.com/bhekanik/openclaw-horror-leaderboard"
+						target="_blank"
+						rel="noopener noreferrer"
+						className="hover:text-foreground transition-colors"
+					>
+						GitHub
+					</a>
 				</div>
 				<p>Not affiliated with OpenClaw, Peter Steinberger, or any related entity.</p>
 				<p className="text-xs font-display">

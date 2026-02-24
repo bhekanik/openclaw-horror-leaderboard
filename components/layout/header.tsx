@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu, Skull } from "lucide-react";
+import { Github, Menu, Skull } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { AuthButton } from "@/components/auth/auth-button";
@@ -42,6 +42,15 @@ export function Header() {
 							{link.label}
 						</Link>
 					))}
+					<a
+						href="https://github.com/bhekanik/openclaw-horror-leaderboard"
+						target="_blank"
+						rel="noopener noreferrer"
+						className="text-muted-foreground hover:text-foreground transition-colors"
+						aria-label="GitHub repository"
+					>
+						<Github className="h-5 w-5" />
+					</a>
 					<AuthButton />
 				</nav>
 
@@ -66,6 +75,16 @@ export function Header() {
 										{link.label}
 									</Link>
 								))}
+								<a
+									href="https://github.com/bhekanik/openclaw-horror-leaderboard"
+									target="_blank"
+									rel="noopener noreferrer"
+									onClick={() => setOpen(false)}
+									className="flex items-center gap-2 text-lg font-medium text-muted-foreground hover:text-foreground transition-colors"
+								>
+									<Github className="h-5 w-5" />
+									GitHub
+								</a>
 							</nav>
 						</SheetContent>
 					</Sheet>
