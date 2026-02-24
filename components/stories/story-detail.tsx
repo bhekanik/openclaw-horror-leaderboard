@@ -48,7 +48,12 @@ interface StoryDetailProps {
 	isAuthenticated?: boolean;
 }
 
-export function StoryDetail({ story, receipts, author, isAuthenticated = false }: StoryDetailProps) {
+export function StoryDetail({
+	story,
+	receipts,
+	author,
+	isAuthenticated = false,
+}: StoryDetailProps) {
 	const cat = CATEGORY_MAP[story.category];
 	const timeAgo = formatTimeAgo(story.createdAt);
 	const Icon = cat?.icon;

@@ -101,4 +101,3 @@ export function CommentItem({ comment, storyId, depth = 0, userVote }: CommentIt
 		</div>
 	);
 }
-

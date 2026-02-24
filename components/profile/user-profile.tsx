@@ -45,7 +45,12 @@ export function UserProfile({ user, stories }: UserProfileProps) {
 					<div className="flex gap-2">
 						{user.badges.map((badge) => {
 							const info = BADGE_MAP[badge];
-							if (!info) return <Badge key={badge} variant="secondary">{badge}</Badge>;
+							if (!info)
+								return (
+									<Badge key={badge} variant="secondary">
+										{badge}
+									</Badge>
+								);
 							const Icon = info.icon;
 							return (
 								<Badge key={badge} variant="secondary" className="gap-1">
@@ -86,7 +91,7 @@ export function UserProfile({ user, stories }: UserProfileProps) {
 				) : (
 					<div className="space-y-3">
 						{stories.map((story, i) => (
-							<StoryCard key={story._id} story={story} index={i} />
+							<StoryCard key={story._id} story={story} />
 						))}
 					</div>
 				)}

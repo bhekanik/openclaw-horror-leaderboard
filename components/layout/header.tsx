@@ -23,9 +23,7 @@ export function Header() {
 					<Link href="/" className="flex items-center gap-2">
 						<Skull className="h-7 w-7 text-primary drop-shadow-[0_0_8px_oklch(0.72_0.17_55_/_40%)]" />
 						<div className="flex flex-col">
-							<span className="text-lg font-bold leading-tight font-display">
-								OpenClaw Horror
-							</span>
+							<span className="text-lg font-bold leading-tight font-display">OpenClaw Horror</span>
 							<span className="text-xs text-muted-foreground leading-tight hidden sm:block">
 								The worst things OpenClaw has done to real people
 							</span>

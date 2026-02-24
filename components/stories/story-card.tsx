@@ -27,21 +27,17 @@ interface StoryCardProps {
 		tags: string[];
 	};
 	rank?: number;
-	index?: number;
 	isAuthenticated?: boolean;
 }
 
-export function StoryCard({ story, rank, index, isAuthenticated = false }: StoryCardProps) {
+export function StoryCard({ story, rank, isAuthenticated = false }: StoryCardProps) {
 	const cat = CATEGORY_MAP[story.category];
 	const scoreDisplay = story.horrorScore.toFixed(2);
 	const timeAgo = formatTimeAgo(story.createdAt);
 	const Icon = cat?.icon;
 
 	return (
-		<Card
-			className="hover:border-primary/30 hover:translate-y-[-2px] hover:shadow-lg hover:shadow-primary/5 transition-all duration-200 animate-card-enter"
-			style={index !== undefined ? { animationDelay: `${index * 50}ms` } : undefined}
-		>
+		<Card className="transition-colors duration-200">
 			<CardContent className="flex gap-4 py-4">
 				{/* Score */}
 				<div className="flex flex-col items-center justify-center min-w-[52px] sm:min-w-[60px] bg-primary/5 rounded-lg px-2 py-1">

@@ -40,7 +40,12 @@ export default function StoryPage() {
 
 	return (
 		<div className="max-w-3xl mx-auto space-y-8">
-			<StoryDetail story={story} receipts={receipts ?? []} author={author ?? null} isAuthenticated={isAuthenticated} />
+			<StoryDetail
+				story={story}
+				receipts={receipts ?? []}
+				author={author ?? null}
+				isAuthenticated={isAuthenticated}
+			/>
 			<hr className="border-border" />
 			<CommentThread storyId={story._id} />
 		</div>

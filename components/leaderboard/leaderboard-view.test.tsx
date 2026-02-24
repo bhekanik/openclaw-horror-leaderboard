@@ -1,21 +1,32 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { NuqsTestingAdapter } from "nuqs/adapters/testing";
+import { beforeAll, describe, expect, it, vi } from "vitest";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { LeaderboardView } from "./leaderboard-view";
 
-const { mockUseQuery } = vi.hoisted(() => ({
-	mockUseQuery: vi.fn(),
+// IntersectionObserver not available in jsdom
+class MockIntersectionObserver {
+	observe = vi.fn();
+	unobserve = vi.fn();
+	disconnect = vi.fn();
+	constructor() {}
+}
+
+vi.stubGlobal("IntersectionObserver", MockIntersectionObserver);
+
+const { mockUsePaginatedQuery } = vi.hoisted(() => ({
+	mockUsePaginatedQuery: vi.fn(),
 }));
 
 vi.mock("convex/react", () => ({
-	useQuery: mockUseQuery,
+	usePaginatedQuery: mockUsePaginatedQuery,
 	useMutation: () => vi.fn(),
 	useConvexAuth: () => ({ isAuthenticated: true, isLoading: false }),
 }));
 
 vi.mock("@/convex/_generated/api", () => ({
 	api: {
-		stories: { list: "stories:list" },
+		stories: { listPaginated: "stories:listPaginated" },
 		votes: { cast: "votes:cast", getUserVote: "votes:getUserVote" },
 	},
 }));
@@ -36,8 +47,6 @@ const mockStories = [
 		receiptIds: ["r1"],
 		createdAt: Date.now() - 86400000,
 		tags: [],
-		isHidden: false,
-		isRemoved: false,
 	},
 	{
 		_id: "s2",
@@ -54,36 +63,68 @@ const mockStories = [
 		receiptIds: ["r2", "r3"],
 		createdAt: Date.now() - 172800000,
 		tags: [],
-		isHidden: false,
-		isRemoved: false,
 	},
 ];
 
+function renderView() {
+	return render(
+		<NuqsTestingAdapter>
+			<TooltipProvider>
+				<LeaderboardView />
+			</TooltipProvider>
+		</NuqsTestingAdapter>,
+	);
+}
+
 describe("LeaderboardView", () => {
-	it("renders stories when loaded", () => {
-		mockUseQuery.mockReturnValue(mockStories);
-		render(<TooltipProvider><LeaderboardView /></TooltipProvider>);
-		expect(screen.getByText("First Horror Story")).toBeInTheDocument();
-		expect(screen.getByText("Second Horror Story")).toBeInTheDocument();
+	it("renders virtualized list container when stories loaded", () => {
+		mockUsePaginatedQuery.mockReturnValue({
+			results: mockStories,
+			status: "Exhausted",
+			loadMore: vi.fn(),
+		});
+		renderView();
+		// Virtualizer creates a sized container — jsdom has 0-height viewport
+		// so no story cards render, but the container should exist
+		const container = document.querySelector("[style*='position: relative']");
+		expect(container).toBeInTheDocument();
+		// No empty state should show
+		expect(screen.queryByText(/no stories found/i)).not.toBeInTheDocument();
 	});
 
-	it("renders time filter tabs", () => {
-		mockUseQuery.mockReturnValue(mockStories);
-		render(<TooltipProvider><LeaderboardView /></TooltipProvider>);
+	it("renders filter controls", () => {
+		mockUsePaginatedQuery.mockReturnValue({
+			results: mockStories,
+			status: "Exhausted",
+			loadMore: vi.fn(),
+		});
+		renderView();
+		// Time and sort are in select dropdowns; "All Time" is visible as default
 		expect(screen.getByText(/all time/i)).toBeInTheDocument();
-		expect(screen.getByText(/this week/i)).toBeInTheDocument();
-		expect(screen.getByText(/this month/i)).toBeInTheDocument();
+		expect(screen.getByText(/top scored/i)).toBeInTheDocument();
+		// Category toggle group is present
+		expect(screen.getByRole("group")).toBeInTheDocument();
 	});
 
 	it("renders empty state when no stories", () => {
-		mockUseQuery.mockReturnValue([]);
-		render(<TooltipProvider><LeaderboardView /></TooltipProvider>);
-		expect(screen.getByText(/no stories yet/i)).toBeInTheDocument();
+		mockUsePaginatedQuery.mockReturnValue({
+			results: [],
+			status: "Exhausted",
+			loadMore: vi.fn(),
+		});
+		renderView();
+		expect(screen.getByText(/no stories found/i)).toBeInTheDocument();
 	});
 
 	it("renders loading state", () => {
-		mockUseQuery.mockReturnValue(undefined);
-		render(<TooltipProvider><LeaderboardView /></TooltipProvider>);
-		expect(screen.getByTestId("leaderboard-loading")).toBeInTheDocument();
+		mockUsePaginatedQuery.mockReturnValue({
+			results: [],
+			status: "LoadingFirstPage",
+			loadMore: vi.fn(),
+		});
+		renderView();
+		// Should show skeleton loaders
+		const skeletons = document.querySelectorAll("[data-slot='skeleton']");
+		expect(skeletons.length).toBeGreaterThan(0);
 	});
 });

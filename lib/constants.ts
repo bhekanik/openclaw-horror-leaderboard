@@ -20,12 +20,37 @@ export interface CategoryDef {
 }
 
 export const CATEGORIES: CategoryDef[] = [
-	{ value: "rogue", label: "It went rogue", description: "Agent acted against instructions", icon: Flame },
-	{ value: "cost_money", label: "It cost me money", description: "Financial damage from agent actions", icon: DollarSign },
-	{ value: "scared_me", label: "It scared me", description: "Genuinely unsettling behavior", icon: Ghost },
-	{ value: "security", label: "Security nightmare", description: "Data exposure or security breaches", icon: ShieldAlert },
+	{
+		value: "rogue",
+		label: "It went rogue",
+		description: "Agent acted against instructions",
+		icon: Flame,
+	},
+	{
+		value: "cost_money",
+		label: "It cost me money",
+		description: "Financial damage from agent actions",
+		icon: DollarSign,
+	},
+	{
+		value: "scared_me",
+		label: "It scared me",
+		description: "Genuinely unsettling behavior",
+		icon: Ghost,
+	},
+	{
+		value: "security",
+		label: "Security nightmare",
+		description: "Data exposure or security breaches",
+		icon: ShieldAlert,
+	},
 	{ value: "epic_fail", label: "Epic fail", description: "Spectacular failures", icon: CircleX },
-	{ value: "identity_crisis", label: "Identity crisis", description: "Agent confused about what it is", icon: Fingerprint },
+	{
+		value: "identity_crisis",
+		label: "Identity crisis",
+		description: "Agent confused about what it is",
+		icon: Fingerprint,
+	},
 	{
 		value: "almost_catastrophic",
 		label: "Almost catastrophic",

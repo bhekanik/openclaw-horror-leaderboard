@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Crimson_Pro, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { ConvexClientProvider } from "@/components/layout/convex-provider";
-import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { ThemeProvider } from "@/components/layout/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
@@ -73,16 +73,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 			<body
 				className={`${crimsonPro.variable} ${ibmPlexSans.variable} ${ibmPlexMono.variable} font-body min-h-screen flex flex-col`}
 			>
-				<ConvexClientProvider>
-					<ThemeProvider>
-						<TooltipProvider delayDuration={300}>
-							<Header />
-							<main className="flex-1 container mx-auto px-4 py-8">{children}</main>
-							<Footer />
-							<Toaster />
-						</TooltipProvider>
-					</ThemeProvider>
-				</ConvexClientProvider>
+				<NuqsAdapter>
+					<ConvexClientProvider>
+						<ThemeProvider>
+							<TooltipProvider delayDuration={300}>
+								<Header />
+								<main className="flex-1 flex flex-col min-h-0 overflow-hidden">{children}</main>
+								<Toaster />
+							</TooltipProvider>
+						</ThemeProvider>
+					</ConvexClientProvider>
+				</NuqsAdapter>
 			</body>
 		</html>
 	);

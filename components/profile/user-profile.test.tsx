@@ -29,23 +29,39 @@ const mockUser = {
 
 describe("UserProfile", () => {
 	it("renders username", () => {
-		render(<TooltipProvider><UserProfile user={mockUser} stories={[]} /></TooltipProvider>);
+		render(
+			<TooltipProvider>
+				<UserProfile user={mockUser} stories={[]} />
+			</TooltipProvider>,
+		);
 		expect(screen.getByText("horror_dev")).toBeInTheDocument();
 	});
 
 	it("renders karma stat", () => {
-		render(<TooltipProvider><UserProfile user={mockUser} stories={[]} /></TooltipProvider>);
+		render(
+			<TooltipProvider>
+				<UserProfile user={mockUser} stories={[]} />
+			</TooltipProvider>,
+		);
 		expect(screen.getByText("150")).toBeInTheDocument();
 		expect(screen.getByText(/karma/i)).toBeInTheDocument();
 	});
 
 	it("renders stories count", () => {
-		render(<TooltipProvider><UserProfile user={mockUser} stories={[]} /></TooltipProvider>);
+		render(
+			<TooltipProvider>
+				<UserProfile user={mockUser} stories={[]} />
+			</TooltipProvider>,
+		);
 		expect(screen.getByText("5")).toBeInTheDocument();
 	});
 
 	it("renders badges", () => {
-		render(<TooltipProvider><UserProfile user={mockUser} stories={[]} /></TooltipProvider>);
+		render(
+			<TooltipProvider>
+				<UserProfile user={mockUser} stories={[]} />
+			</TooltipProvider>,
+		);
 		expect(screen.getByText(/survivor/i)).toBeInTheDocument();
 		expect(screen.getByText(/witness/i)).toBeInTheDocument();
 	});
@@ -71,12 +87,20 @@ describe("UserProfile", () => {
 				isRemoved: false,
 			},
 		];
-		render(<TooltipProvider><UserProfile user={mockUser} stories={stories} /></TooltipProvider>);
+		render(
+			<TooltipProvider>
+				<UserProfile user={mockUser} stories={stories} />
+			</TooltipProvider>,
+		);
 		expect(screen.getByText("My Horror Story")).toBeInTheDocument();
 	});
 
 	it("renders empty stories message", () => {
-		render(<TooltipProvider><UserProfile user={mockUser} stories={[]} /></TooltipProvider>);
+		render(
+			<TooltipProvider>
+				<UserProfile user={mockUser} stories={[]} />
+			</TooltipProvider>,
+		);
 		expect(screen.getByText(/no stories submitted/i)).toBeInTheDocument();
 	});
 });

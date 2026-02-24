@@ -1,4 +1,5 @@
 import { getAuthUserId } from "@convex-dev/auth/server";
+import { paginationOptsValidator } from "convex/server";
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
@@ -182,6 +183,63 @@ export const list = query({
 		}
 
 		return stories.slice(0, limit);
+	},
+});
+
+export const listPaginated = query({
+	args: {
+		paginationOpts: paginationOptsValidator,
+		timeRange: v.optional(v.union(v.literal("week"), v.literal("month"), v.literal("all"))),
+		category: v.optional(v.array(v.string())),
+		sortBy: v.optional(
+			v.union(v.literal("score"), v.literal("recent"), v.literal("controversial")),
+		),
+	},
+	handler: async (ctx, args) => {
+		const sortBy = args.sortBy ?? "score";
+		const categories = args.category ?? [];
+
+		let query;
+		if (categories.length === 1) {
+			query = ctx.db
+				.query("stories")
+				.withIndex("by_category", (q) => q.eq("category", categories[0]));
+		} else if (sortBy === "recent") {
+			query = ctx.db.query("stories").withIndex("by_createdAt");
+		} else {
+			query = ctx.db.query("stories").withIndex("by_horrorScore");
+		}
+
+		const results = await query.order("desc").paginate(args.paginationOpts);
+
+		// Post-filter: hidden/removed, multi-category, time range
+		let filtered = results.page.filter((s) => !s.isHidden && !s.isRemoved);
+
+		if (categories.length > 1) {
+			filtered = filtered.filter((s) => categories.includes(s.category));
+		}
+
+		if (args.timeRange && args.timeRange !== "all") {
+			const now = Date.now();
+			const cutoff =
+				args.timeRange === "week" ? now - 7 * 24 * 60 * 60 * 1000 : now - 30 * 24 * 60 * 60 * 1000;
+			filtered = filtered.filter((s) => s.createdAt >= cutoff);
+		}
+
+		// Controversial: re-sort client-side
+		if (sortBy === "controversial") {
+			filtered.sort((a, b) => {
+				const aRatio = a.totalVotes > 0 ? Math.abs(0.5 - a.upvotes / a.totalVotes) : 1;
+				const bRatio = b.totalVotes > 0 ? Math.abs(0.5 - b.upvotes / b.totalVotes) : 1;
+				if (aRatio !== bRatio) return aRatio - bRatio;
+				return b.totalVotes - a.totalVotes;
+			});
+		}
+
+		return {
+			...results,
+			page: filtered,
+		};
 	},
 });
 
